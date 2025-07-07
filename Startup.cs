@@ -22,6 +22,8 @@ using Business_layer.Container;
 using Extensions = Business_layer.Container.Extensions;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using TravelReservation.CQRS.Handlers.DestinationHandlers;
+using MediatR;
 
 namespace TravelReservation
 {
@@ -38,6 +40,12 @@ namespace TravelReservation
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddScoped<GetAllDestinationQueryHandler>();
+            services.AddScoped<GetDestinationByIDQueryHandler>();
+            services.AddScoped<CreateDestinationCommandHandler>();
+
+            services.AddMediatR(typeof(Startup));//typeof(Startup):Handler'ların aranacağı assembly'i (proje/dll) belirtir
+
             services.AddLogging(x =>
             {
                 x.ClearProviders();
@@ -53,6 +61,8 @@ namespace TravelReservation
                 .AddErrorDescriber<CustomIdentityValidator>();
 
             services.ContainerDependencies();
+
+            services.AddAutoMapper(typeof(Startup));
 
             services.ConfigureApplicationCookie(options =>
             {
